@@ -1,0 +1,104 @@
+/* Container for the report form */
+.report-form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 2px solid rgb(7, 59, 7); /* primary green color */
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  /* Form heading */
+  .report-form-container h2 {
+    text-align: center;
+    color: rgb(7, 59, 7); /* primary green color */
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  /* Form group styles */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: rgb(7, 59, 7); /* primary green color */
+  }
+  
+  .form-group label i {
+    margin-right: 8px;
+  }
+  
+  /* Input and textarea styles */
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="tel"],
+  .form-group input[type="file"],
+  .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid rgb(7, 59, 7);
+    border-radius: 4px;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  /* Submit button */
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: rgb(7, 59, 7);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  button[type="submit"]:hover:not(:disabled) {
+    background-color: rgb(6, 50, 6);
+  }
+  
+  /* Error message styles */
+  .error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
+  .success-message {
+    position: fixed; /* Use fixed to center it in relation to the viewport */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust to truly center */
+    color: green; /* Change to your desired color */
+    font-weight: bold;
+    padding: 10px 20px; /* Optional padding for better visibility */
+    background-color: rgba(255, 255, 255, 0.8); /* Optional background for contrast */
+    border: 1px solid green; /* Optional border */
+    border-radius: 5px; /* Optional rounded corners */
+    z-index: 1000; /* Make sure it’s on top of other content */
+  }
+
+  @media (max-width: 500px) {
+    .ok{
+        display: flex;
+        min-height: 90vh;
+        align-items: center;
+    }
+  }
+  

@@ -1,0 +1,102 @@
+ .all {
+    font-family: Arial, sans-serif; /* Set a modern font */
+    background-color: rgb(7, 59, 7); /* Light background for contrast */
+    padding: 20px; /* Add some padding */
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.head a {
+    color: white; /* Primary color (green) for back arrow */
+    text-decoration: none; /* Remove underline */
+    font-size: 24px; /* Larger icon size */
+}
+
+.ppp {
+    flex-grow: 1; /* Pushes the title to the center */
+    text-align: center; /* Center the title */
+}
+
+.pp {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+#map {
+    height: 300px; /* Fixed height for the map */
+    border-radius: 8px; /* Rounded corners for the map */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for map */
+    margin-bottom: 5px;
+}
+
+.detailss {
+    background-color: #333;
+    padding: 15px;
+    border-radius:  8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: white;
+    margin-top: -10px;
+}
+
+.time {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    background-color: #555353;
+    padding: 10px;
+}
+
+.time p {
+    margin: 0;
+    font-size: 16px;
+    color: white;
+}
+.icon{
+    color: white;
+}
+
+.details {
+    margin-bottom: 15px;
+    line-height: 1.5; 
+    background-color: rgb(129, 47, 47);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.details p {
+    margin: 5px 0;
+}
+
+.stops {
+    margin-top: 15px;
+}
+
+.stops h3 {
+    margin-bottom: 10px;
+    color: #258f29;
+}
+
+.stops ul {
+    list-style: none;
+    padding: 0;
+}
+
+.stops li {
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #7c7575;
+    transition: background-color 0.3s;
+}
+
+.stops li:hover {
+    background-color: #e0e0e0;
+}

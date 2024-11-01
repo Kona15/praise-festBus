@@ -1,0 +1,77 @@
+.logo{
+    background-color: rgb(7, 59, 7);
+    padding: 5px;
+    width: 100%;
+    top: 0;
+    height: 30px;
+}
+a.log{
+    text-decoration-line: none;
+    color: white;
+    font-weight: bold;
+    font-style: italic;
+    /* font-size: 2rem; */
+}
+.navbar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1030;
+    min-height: 60px;
+    background-color: rgb(43, 41, 41);
+}
+
+a {
+    color: white;
+}
+
+/* Center the hamburger menu on mobile */
+@media (max-width: 992px) {
+    .navbar-toggler {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* Justify nav items with space-between */
+.navbar-nav {
+    width: 100%;
+    justify-content: space-between; /* Ensures even spacing between items */
+    align-items: baseline; /* Aligns items correctly */
+}
+
+/* Center text vertically in the navbar items */
+.navbar-nav .nav-link {
+    display: flex; /* Allows for vertical centering */
+    flex-direction: column; /* Aligns icon and text in a column */
+    justify-content: center; /* Centers items vertically */
+    text-align: center; /* Centers text horizontally */
+}
+
+/* Style for the hamburger icon to be white */
+.navbar-light .navbar-toggler {
+    border-color: transparent; /* Remove default border */
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-image: none; /* Remove default hamburger icon */
+}
+
+.navbar-light .navbar-toggler-icon::before,
+.navbar-light .navbar-toggler-icon::after {
+    content: "";
+    display: block;
+    width: 30px; /* Adjust the width as needed */
+    height: 2px; /* Thickness of the lines */
+    background-color: white; /* Color of the lines */
+    position: relative;
+}
+
+.navbar-light .navbar-toggler-icon::after {
+    top: 5px; /* Space between the lines */
+}
+
+.navbar-light .navbar-toggler-icon::before {
+    top: 10px; /* Space between the lines */
+}

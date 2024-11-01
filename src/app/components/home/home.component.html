@@ -1,0 +1,70 @@
+<div class="body">
+    <div id="map"></div>
+
+    <div *ngIf="loading" class="loading-indicator">
+      <div class="pulse-circle"></div>
+      <div class="pulse-circle"></div>
+      <div class="pulse-circle"></div>
+    </div>
+    
+
+    <div class="search">
+      <!-- Search Input -->
+      <input
+        type="text"
+        id="search"
+        placeholder=  "Want to go to..."
+        (input)="onSearchInput($event)"
+      />
+    </div>
+
+   
+
+
+    <!-- Display current bus stop -->
+    <div *ngIf="currentBusStop" id="current-bus-stop" style="margin-top: 20px;">
+      <p class="y">Current Bus Stop: </p>
+      <div class="current">
+        <p class="stop">Home Street</p>
+          <h4>{{ currentBusStop.name }}</h4>
+          <div class="buss">
+              <p><b><i class="bi bi-phone"></i>37</b></p>
+              <p><b class="sec">11</b></p>
+          </div>
+      </div>
+    </div>
+
+    <div class="buttons">
+        <button (click)="navigateToReport()" id="but"> Report </button>
+        <button (click)="navigateToContact()" id="button" class="but"> 
+            Contact Us 
+            <div class="greater">
+                <img src="/assets/greater-than-symbol.png" alt="" width="20px" height="20px">
+            </div>
+        </button>
+
+    </div>
+
+    <!-- Display nearest bus stops -->
+     <div class="all-bus">
+         <div *ngIf="nearestBusStops.length > 0" id="nearest-bus-stops">
+           <p class="p">Nearest Bus Stops:</p>
+           <div *ngFor="let busStop of nearestBusStops" class="bus-stop-container">
+             <div class="con">
+                 <div class="icon">
+                  <div style="position: relative; display: inline-block;">
+                    <i class="bi bi-arrow-down-right" style="font-size: 24px; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
+                    <div style="width: 50px; height: 50px; border: 6px solid rgb(106, 134, 194); border-radius: 50%; background-color: red;"></div>
+                  </div>
+                 </div>
+                 <div class="lis">
+                     <h4>{{ busStop.name }}</h4>
+                     <p id="icon"><b>{{ busStop.distance | number: '1.1-1' }}</b> km away</p>
+                 </div>
+             </div>
+             <p><b class="sec">{{ busStop.time }}</b> away</p>
+           </div>
+         </div>
+
+     </div>
+</div>

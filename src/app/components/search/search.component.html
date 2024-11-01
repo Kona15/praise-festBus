@@ -1,0 +1,96 @@
+<div class="search-container">
+
+    <div *ngIf="loading" class="loading-indicator">
+        <div class="pulse-circle"></div>
+        <div class="pulse-circle"></div>
+        <div class="pulse-circle"></div>
+      </div>
+
+    <div class="search2">
+        <div class="search-bar">
+            <div class="search">
+              <input
+                type="text"
+                placeholder="From"
+                (input)="searchFrom($event)"
+                [(ngModel)]="fromInput"
+                (focus)="setActiveInput('from')" 
+              />
+              
+              <div *ngIf="fromResults.length > 0" id="suggestions">
+                <ul>
+                  <li *ngFor="let result of fromResults" (click)="selectFrom(result)">
+                    {{ result }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          
+            <div class="search">
+              <input
+                type="text"
+                placeholder="To"
+                (input)="searchTo($event)"
+                [(ngModel)]="toInput"
+                (focus)="setActiveInput('to')" 
+              />
+              
+              <div *ngIf="toResults.length > 0" id="suggestions">
+                <ul>
+                  <li *ngFor="let result of toResults" (click)="selectTo(result)">
+                    {{ result }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+      
+        </div>
+
+        <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+        
+          <button (click)="submit()">Search</button>
+
+    </div>
+  
+    <div class="history-section">
+        <div *ngIf="showHistory && (fromHistory.length > 0 || toHistory.length > 0)">
+            <span class="clear-history" (click)="clearHistory()">Clear History</span>
+          </div>
+          
+      
+        <!-- Display history for both 'from' and 'to' inputs -->
+        <div *ngIf="showHistory && (fromHistory.length > 0 || toHistory.length > 0)" class="history">
+          <ul>
+            <!-- From History -->
+            <li *ngFor="let history of fromHistory" class="history-item" 
+                (mouseenter)="hoverHistoryItem = history" (mouseleave)="hoverHistoryItem = null">
+              <span (click)="useHistory(history)">{{ history }}</span>
+              <!-- Delete icon visible on hover -->
+              <span *ngIf="hoverHistoryItem === history" class="delete-icon" (click)="deleteFromHistory(history)"><i class="bi bi-trash3-fill"></i></span>
+            </li>
+      
+            <!-- To History -->
+            <li *ngFor="let history of toHistory" class="history-item" 
+                (mouseenter)="hoverHistoryItem = history" (mouseleave)="hoverHistoryItem = null">
+              <span (click)="useHistory(history)">{{ history }}</span>
+              <!-- Delete icon visible on hover -->
+              <span *ngIf="hoverHistoryItem === history" class="delete-icon" (click)="deleteToHistory(history)"><i class="bi bi-trash3-fill"></i></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+  
+    <!-- Display travel details if available -->
+    <div *ngIf="travelDetails" class="details">
+      <p>Arrivals at: {{ travelDetails.arrivalTime }}</p>
+      <p>Drop-off Time: {{ travelDetails.dropOffTime }}</p>
+      <p>Duration: <b class="min">{{ travelDetails.duration }}</b></p>
+
+      <!-- See route button that navigates to route page -->
+       <div class="see-route">
+           <button (click)="navigateToRoute()">See route</button>
+       </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,56 @@
+<div class="ok">
+    <div class="report-form-container">
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+            <h2>Submit a Report</h2>
+    
+            <!-- Subject -->
+            <div class="form-group">
+                <label><i class="fas fa-file-alt"></i> Subject</label>
+                <input formControlName="subject" type="text" placeholder="Enter subject" />
+                <div *ngIf="reportForm.get('subject')?.invalid && reportForm.get('subject')?.touched" class="error">
+                    Subject is required.
+                </div>
+            </div>
+    
+            <!-- Email -->
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input formControlName="email" type="email" placeholder="Enter your email" />
+                <div *ngIf="reportForm.get('email')?.invalid && reportForm.get('email')?.touched" class="error">
+                    Enter a valid email.
+                </div>
+            </div>
+    
+            <!-- Phone Number -->
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Phone Number</label>
+                <input formControlName="phoneNumber" type="tel" placeholder="Enter your phone number" />
+                <div *ngIf="reportForm.get('phoneNumber')?.invalid && reportForm.get('phoneNumber')?.touched" class="error">
+                    Phone number must be 11 digits.
+                </div>
+            </div>
+    
+            <!-- Message -->
+            <div class="form-group">
+                <label><i class="fas fa-pen"></i> Message</label>
+                <textarea formControlName="message" rows="5" placeholder="Enter your message"></textarea>
+                <div *ngIf="reportForm.get('message')?.invalid && reportForm.get('message')?.touched" class="error">
+                    Message is required.
+                </div>
+            </div>
+    
+            <!-- Optional Attachment -->
+            <div class="form-group">
+                <label><i class="fas fa-paperclip"></i> Attachment (optional)</label>
+                <input formControlName="attachment" type="file" />
+            </div>
+    
+            <!-- Submit Button -->
+            <button type="submit" [disabled]="reportForm.invalid">Submit</button>
+        </form>
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    
+    </div>
+
+</div>
