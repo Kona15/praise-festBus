@@ -47,8 +47,6 @@
         </div>
 
         <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-        
-          <button (click)="submit()">Search</button>
 
     </div>
   
@@ -83,13 +81,14 @@
   
     <!-- Display travel details if available -->
     <div *ngIf="travelDetails" class="details">
-      <p>Arrivals at: {{ travelDetails.arrivalTime }}</p>
-      <p>Drop-off Time: {{ travelDetails.dropOffTime }}</p>
-      <p>Duration: <b class="min">{{ travelDetails.duration }}</b></p>
-
+      <div>
+        <p>Arrivals at: {{ travelDetails.arrivalTime }}</p>
+        <p>Drop-off Time: {{ travelDetails.dropOffTime }}</p>
+        <p>Duration: <b class="min">{{ travelDetails.duration }}</b></p>
+      </div>
       <!-- See route button that navigates to route page -->
        <div class="see-route">
-           <button (click)="navigateToRoute()">See route</button>
+        <button (click)="navigateToRoute()" class="seeroute">See route</button>
        </div>
     </div>
   </div>

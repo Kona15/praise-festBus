@@ -13,6 +13,7 @@ import { BusInformationComponent } from './components/bus-information/bus-inform
 import { ReportComponent } from './components/report/report.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ContactComponent } from './components/contact/contact.component';
+import { RrComponent } from './rr/rr.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ContactComponent } from './components/contact/contact.component';
     RouteComponent,
     BusInformationComponent,
     ReportComponent,
-    ContactComponent
+    ContactComponent,
+    RrComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-// import { log } from 'console';
 
 export interface BusStop {
   name: string;
@@ -119,15 +118,26 @@ export class BusStopService {
     return busStop ? { lat: busStop.lat, lng: busStop.lng } : null;
   }
 
-  getStopsAlongRoute(fromCoords: { lat: number; lng: number }, toCoords: { lat: number; lng: number }): BusStop[] {
-    const radius = 0.001; // Adjust this value as needed to determine proximity
-    return this.busStops.filter(stop => 
+  // In bus-stop.service.ts
+getStopsAlongRoute(fromCoords: { lat: number; lng: number }, toCoords: { lat: number; lng: number }): RouteBusStop[] {
+  const radius = 0.001; // Adjust as needed for proximity
+  return this.busStops
+    .filter(stop =>
       stop.lat >= Math.min(fromCoords.lat, toCoords.lat) - radius &&
       stop.lat <= Math.max(fromCoords.lat, toCoords.lat) + radius &&
       stop.lng >= Math.min(fromCoords.lng, toCoords.lng) - radius &&
       stop.lng <= Math.max(fromCoords.lng, toCoords.lng) + radius
-    );
-  }
+    )
+    .map(stop => {
+      // Calculate distance and duration for each stop
+      const distance = this.getDistance(fromCoords, { lat: stop.lat, lng: stop.lng });
+      const timeToReach = this.calculateDuration(distance, 30); // Assuming average speed of 30 km/h
+      return { ...stop, distance, timeToReach } as RouteBusStop;
+    });
+}
+
+
+  
 
   // Calculate distance between two coordinates using the Haversine formula
   getDistance(fromCoords: { lat: number; lng: number }, toCoords: { lat: number; lng: number }): number {
@@ -155,7 +165,7 @@ export class BusStopService {
   calculateDuration(distanceInKm: number, speedKmH: number): string {
     const durationInHours = distanceInKm / speedKmH;
     const durationInMinutes = Math.round(durationInHours * 60);
-    console.log(`Distance: ${distanceInKm} km, Speed: ${speedKmH} km/h, Duration: ${durationInMinutes} min`); // Log the values
+    // console.log(`Distance: ${distanceInKm} km, Speed: ${speedKmH} km/h, Duration: ${durationInMinutes} min`); 
     return `${durationInMinutes} min`;
   }
 

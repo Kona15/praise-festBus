@@ -40,7 +40,7 @@
     border-radius:  8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     color: white;
-    margin-top: -10px;
+    margin-top: 10px;
 }
 
 .time {
@@ -89,14 +89,49 @@
 }
 
 .stops li {
-    margin: 5px 0;
+    margin: 7px 0;
     padding: 10px;
-    border: 1px solid #ddd;
+    box-shadow: 0 5px 8px rgba(206, 76, 76, 0.1);
     border-radius: 5px;
-    background-color: #7c7575;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
 }
 
 .stops li:hover {
-    background-color: #e0e0e0;
+    background-color: rgba(189, 74, 74, 0.1);
+    transform: translateY(-8px);
 }
+
+.route-info {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .route-info p {
+    margin: 5px 0;
+  }
+  
+  .instructions-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .instructions-list li {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .instructions-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .turn-icon {
+    color: #007bff;
+    margin-right: 8px;
+    font-size: 1.2em;
+  }
+  

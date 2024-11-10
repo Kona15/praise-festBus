@@ -1,46 +1,39 @@
 <div class="all">
-
-    <div class="head">
-        <a href="/search"><i class="bi bi-chevron-left"></i></a>
-        
-        <div class="ppp">
-            <div class="pp">Trip details</div>
-        </div>
-    </div>
-
-    <div id="map" style="height: 300px; width: 100%;">.</div>
-
-      <div class="time">
-        <div><p>{{ arrivalTime }}</p></div>
-        <div><i class="bi bi-arrow-right-short icon"></i></div>
-        <div><p>{{ dropOffTime }}</p></div>
-    </div>
-
-    
-    <div class="details">
-      <p><strong>From:</strong> {{ from }}</p>
-      <p><strong>To:</strong> {{ to }}</p>
-      <p><strong>Duration:</strong> {{ duration }}</p>
-    </div>
-
-    <div class="detailss">
-
-      
-      <!-- New section to display stops along the route -->
-      <div class="stops">
-        <h3>Stops Along the Route:</h3>
-        <ul>
-            <li *ngFor="let stop of stopsAlongRoute">
-                <b>{{ stop.name }}</b> <br>Arrives in {{ stop.timeToReach }}
-            </li>
-        </ul>
-      </div>
-  
-    </div>
-  
-   
-    
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="pulse-circle"></div>
+    <div class="pulse-circle"></div>
+    <div class="pulse-circle"></div>
   </div>
-  
-  
-  
+
+  <div class="head">
+    <a href="/search"><i class="bi bi-chevron-left"></i></a>
+    <div class="ppp">
+      <div class="pp">Trip details</div>
+    </div>
+  </div>
+
+  <div id="map" class="map"></div>
+
+  <div class="time">
+    <div><p>{{ arrivalTime }}</p></div>
+    <div><i class="bi bi-arrow-right-short icon"></i></div>
+    <div><p>{{ dropOffTime }}</p></div>
+  </div>
+
+  <div class="details">
+    <p><strong>From:</strong> {{ fromInput }}</p>
+    <p><strong>To:</strong> {{ toInput }}</p>
+    <p><strong>Duration:</strong> {{ totalDuration }}</p>
+  </div>
+
+  <div class="detailss">
+    <div class="stops">
+      <h5>Stops Along the Route:</h5>
+      <ul>
+        <li *ngFor="let stop of stopsAlongRoute">
+          <b>{{ stop.name }}</b> <br>Bus Number: {{ stop.busNumber }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

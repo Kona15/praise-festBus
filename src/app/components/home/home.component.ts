@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   currentBusStop: BusStopWithDistance | null = null;
   searchQuery: string = '';
   loading: boolean = false;
-
+  locationName: string = '';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -38,15 +38,18 @@ export class HomeComponent implements OnInit {
   getLocationName(lat: number, lng: number) {
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
 
+
     fetch(url)
       .then(response => response.json())
       .then(data => {
         const locationName = data.display_name;
-        console.log("User location name:", locationName);
+        this.locationName = locationName;
+        console.log("User location name:", locationName, ' ', lat, ' ', lng );
       })
       .catch(error => {
         console.error('Error fetching location name:', error);
       });
+      console.log(this.locationName)
   }
 
   loadMap() {
@@ -161,4 +164,28 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/search'], { queryParams: { q: query } });
     }
   }
+
+  // Function to navigate to route page with selected bus stop details
+  navigateToRoutePage(busStop: BusStopWithDistance) {
+    if (this.locationName) {
+      // Log location name if available
+      console.log("Location name found:", this.locationName);
+  
+      this.router.navigate(['/route'], {
+        queryParams: {
+          currentLat: this.userLocation?.lat,
+          currentLng: this.userLocation?.lng,
+          stopLat: busStop.lat,
+          stopLng: busStop.lng,
+          stopName: busStop.name,
+          locationName: this.locationName 
+        }
+      });
+    } else {
+      console.log("Location name unavailable");
+  
+      setTimeout(() => this.navigateToRoutePage(busStop), 500);
+    }
+  }
+  
 }

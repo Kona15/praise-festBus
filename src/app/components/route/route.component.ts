@@ -1,7 +1,9 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BusStopService, BusStop, RouteBusStop } from '../services/bus-stop.service';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import * as L from 'leaflet';
+import { ActivatedRoute } from '@angular/router';
+import { BusStopService, RouteBusStop } from '../services/bus-stop.service';
+import 'leaflet-routing-machine';
+
 
 @Component({
   selector: 'app-route',
@@ -9,112 +11,159 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./route.component.css']
 })
 export class RouteComponent implements OnInit {
-  from: string = '';
-  to: string = '';
-  arrivalTime: string = '';
-  dropOffTime: string = '';
-  duration: string = '';
+  map: any;
+  stop: any;
+  from: { lat: number; lng: number } | null = null;
+  to: { lat: number; lng: number } | null = null;
+  fromInput: string | null = null;
+  toInput: string | null = null;
+  duration: string | null = null;
+  arrivalTime: string | null = null;
+  dropOffTime: string | null = null;
+  loading: boolean = false;
   stopsAlongRoute: RouteBusStop[] = [];
+  currentLat: number | null = null;
+  currentLng: number | null = null;
+  stopLat: number | null = null;
+  stopLng: number | null = null;
+  stopName: string | null = null;
+  locationName: string | null = null;
+  totalDistance: string | null = null;
+  totalDuration: string | null = null;
+  instructions: { text: string; icon: string }[] = [];
 
-  private map: any;
-  private leaflet: any;
-  private Routing: any;
-  private fromCoords: { lat: number; lng: number } | null = null;
-  private toCoords: { lat: number; lng: number } | null = null;
+  constructor(private route: ActivatedRoute, private busStopService: BusStopService) { }
 
-  constructor(
-    private route: ActivatedRoute,
-    private busStopService: BusStopService,
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
-
-  ngOnInit(): void {
+  ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.from = params['from'] || '';
-      this.to = params['to'] || '';
-      this.arrivalTime = params['arrivalTime'] || '';
-      this.dropOffTime = params['dropOffTime'] || '';
-      this.duration = params['duration'] || '';
+      const fromInput = params['from'];
+      const toInput = params['to'];
+      const arrivalTime = params['arrivalTime'];
+      const dropOffTime = params['dropOffTime'];
+      const duration = params['duration'];
 
-      this.loadMap();
+      this.currentLat = +params['currentLat'];
+      this.currentLng = +params['currentLng'];
+      this.locationName = params['locationName'];
+      this.stopLat = +params['stopLat'];
+      this.stopLng = +params['stopLng'];
+      this.stopName = params['stopName'];
+
+      this.duration = params['duration'];
+      this.arrivalTime = params['arrivalTime'];
+      this.dropOffTime = params['dropOffTime'];
+
+      if( fromInput && toInput) {
+        this.fromInput = fromInput;
+        this.toInput = toInput;
+        this.from = this.busStopService.getBusStopCoordinates(fromInput);
+        this.to = this.busStopService.getBusStopCoordinates(toInput);
+      } else if (this.currentLat && this.currentLng && this.stopLat && this.stopLng) {
+        this.from = { lat: this.currentLat, lng: this.currentLng };
+        this.to = { lat: this.stopLat, lng: this.stopLng };
+        this.fromInput = this.locationName;
+        this.toInput = this.stopName;
+      } else{
+        console.error('No valid coordinates found for routing.');
+      }
+
+      console.log('From coordinates:', this.from?.lat, this.from?.lng);
+      console.log('To coordinates:', this.to?.lat, this.to?.lng);
+      console.log('Arrival Time:', arrivalTime);
+      console.log('Drop Off Time:', dropOffTime);
+      console.log('Duration:', duration);
+      console.log(fromInput, toInput);
+
+      console.log(this.locationName, this.currentLat, this.currentLng);
+      console.log(this.stopName, this.stopLat, this.stopLng);
+      
+      
+
+
+      this.initMap();
     });
   }
 
-  
-async loadMap() {
-  if (isPlatformBrowser(this.platformId)) {
-    const L = await import('leaflet');
-    const Routing = await import('leaflet-routing-machine');
-    this.leaflet = L;
-    this.Routing = Routing;
+  initMap() {
+    this.map = L.map('map').setView([6.4667, 3.3250], 13);
 
-    const mapContainer = document.getElementById('map');
-    if (!mapContainer) return;
-
-    // Festac coordinates to use as a default center when no 'from' and 'to'
-    const festacCoords = { lat: 6.465422, lng: 3.406448 }; // Replace with actual Festac coordinates if needed
-
-    // Set coordinates for map view based on 'from' and 'to' inputs
-    this.fromCoords = this.from ? this.busStopService.getBusStopCoordinates(this.from) : null;
-    this.toCoords = this.to ? this.busStopService.getBusStopCoordinates(this.to) : null;
-
-    // Determine the center of the map based on provided or default coordinates
-    const centerCoords = (this.fromCoords && this.toCoords) ? this.fromCoords : festacCoords;
-    this.map = this.leaflet.map('map').setView([centerCoords.lat, centerCoords.lng], 13);
-
-    // Add the OpenStreetMap layer
-    this.leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 16,
-      attribution: '© OpenStreetMap'
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
     }).addTo(this.map);
 
-    // Only add route if 'from' and 'to' coordinates are defined
-    if (this.fromCoords && this.toCoords) {
-      this.addMarkersAndRoute(this.fromCoords, this.toCoords);
-      const defaultSpeedKmH = 30; // Default speed in km/h
-      this.fetchStopsAlongRoute(this.fromCoords, this.toCoords, defaultSpeedKmH);
-    }
-  } else {
-    console.error('Not running in a browser environment. Map cannot be loaded.');
-  }
-}
 
-  fetchStopsAlongRoute(fromLatLng: { lat: number; lng: number }, toLatLng: { lat: number; lng: number }, speedKmH: number) {
-    this.stopsAlongRoute = this.busStopService.getStopsAlongRoute(fromLatLng, toLatLng)
-      .filter(stop => 
-        !(stop.lat === fromLatLng.lat && stop.lng === fromLatLng.lng) &&
-        !(stop.lat === toLatLng.lat && stop.lng === toLatLng.lng)
-      )
-      .map(stop => {
-        const { distance, duration } = this.busStopService.getRandomDistanceAndDuration(fromLatLng, { lat: stop.lat, lng: stop.lng }, speedKmH);
-        return { ...stop, distance, timeToReach: duration } as RouteBusStop;
+    if (this.from && this.to) {
+
+        // Create markers for 'from' and 'to' locations
+    const fromMarker = L.marker([this.from.lat, this.from.lng]).addTo(this.map);
+    const toMarker = L.marker([this.to.lat, this.to.lng]).addTo(this.map);
+
+    // Bind popups to the 'from' and 'to' markers with location names
+    fromMarker.bindPopup(`<b>From:</b> ${this.fromInput}`).openPopup();
+    toMarker.bindPopup(`<b>To:</b> ${this.toInput}`).openPopup();
+    
+      const plan = new L.Routing.Plan([
+        L.latLng(this.from.lat, this.from.lng),
+        L.latLng(this.to.lat, this.to.lng)
+      ], {
+        createMarker: (i, waypoint) => {
+          return L.marker(waypoint.latLng);
+        }
       });
-  
-    console.log('Stops along route with distance and duration:', this.stopsAlongRoute);
+
+      this.displayStopsAlongRoute();
+
+      const routingControl = L.Routing.control({
+        plan: plan,
+        routeWhileDragging: true,
+        show: false,
+      }).addTo(this.map);
+
+
+      routingControl.on('routesfound', (e) => {
+        const routes = e.routes;
+        const summary = routes[0].summary;
+
+        this.totalDistance = (summary.totalDistance / 1000).toFixed(2) + ' km';
+        this.totalDuration = (summary.totalTime / 60).toFixed(2) + ' mins';
+
+        
+
+        // Map icons based on keywords in the instructions
+        this.instructions = routes[0].instructions.map((instruction: { text: string }) => {
+          let iconClass = 'fa-arrow-right';
+
+          if (instruction.text.toLowerCase().includes('left')) {
+            iconClass = 'fa-arrow-left';
+          } else if (instruction.text.toLowerCase().includes('right')) {
+            iconClass = 'fa-arrow-right';
+          } else if (instruction.text.toLowerCase().includes('continue') || instruction.text.toLowerCase().includes('straight')) {
+            iconClass = 'fa-arrow-up';
+          } else if (instruction.text.toLowerCase().includes('destination')) {
+            iconClass = 'fa-flag-checkered';
+          }
+
+          return { text: instruction.text, icon: iconClass };
+        });
+      });
+
+
+    } else {
+      console.error('Coordinates for from or to are not available');
+    }
   }
-  
 
-  calculateTimeToReach(distance: number): number {
-    const averageSpeed = 30; // Example speed in km/h
-    const timeInMinutes = (distance / averageSpeed) * 60;
-    return Math.round(timeInMinutes);
-  }
+  displayStopsAlongRoute() {
+    if (!this.from || !this.to) return;
 
-  addMarkersAndRoute(fromLatLng: { lat: number, lng: number }, toLatLng: { lat: number, lng: number }) {
-    const { leaflet, map } = this;
+    // Get stops along the route from BusStopService
+    const stops = this.busStopService.getStopsAlongRoute(this.from, this.to);
+    this.stopsAlongRoute = stops;
 
-    leaflet.marker([fromLatLng.lat, fromLatLng.lng])
-      .addTo(map)
-      .bindPopup(`From: ${this.from}`)
-      .openPopup();
-
-    leaflet.marker([toLatLng.lat, toLatLng.lng])
-      .addTo(map)
-      .bindPopup(`To: ${this.to}`)
-      .openPopup();
-
-    map.fitBounds([fromLatLng, toLatLng]);
-    leaflet.polyline([fromLatLng, toLatLng], { color: 'blue' }).addTo(map);
+    stops.forEach((stop) => {
+      // Add a marker for each stop on the map
+      // const marker = L.marker([stop.lat, stop.lng]).addTo(this.map);
+      // marker.bindPopup(`<b>${stop.name}</b><br>Bus Number: ${stop.busNumber}`).openPopup();
+    });
   }
 }

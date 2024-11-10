@@ -22,7 +22,7 @@
 
 
     <!-- Display current bus stop -->
-    <div *ngIf="currentBusStop" id="current-bus-stop" style="margin-top: 20px;">
+    <div *ngIf="currentBusStop" id="current-bus-stop" style="margin-top: 20px;" (click)="navigateToRoutePage(currentBusStop)">
       <p class="y">Current Bus Stop: </p>
       <div class="current">
         <p class="stop">Home Street</p>
@@ -49,7 +49,7 @@
      <div class="all-bus">
          <div *ngIf="nearestBusStops.length > 0" id="nearest-bus-stops">
            <p class="p">Nearest Bus Stops:</p>
-           <div *ngFor="let busStop of nearestBusStops" class="bus-stop-container">
+           <div *ngFor="let busStop of nearestBusStops" class="bus-stop-container" (click)="navigateToRoutePage(busStop)">
              <div class="con">
                  <div class="icon">
                   <div style="position: relative; display: inline-block;">
